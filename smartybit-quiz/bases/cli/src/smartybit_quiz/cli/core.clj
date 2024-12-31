@@ -1,4 +1,5 @@
-(ns smartybit-quiz.cli.core)
+(ns smartybit-quiz.cli.core
+  (:require [smartybit-quiz.cli.commands :as c]))
 
 (defn -main [& args]
-  (println "Hello, World!"))
+  (c/execute args))
