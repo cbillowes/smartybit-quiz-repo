@@ -1,19 +1,26 @@
-{:paths ["src" "resources"]
- :deps {org.clojure/clojure {:mvn/version "1.10.3"}}
- :aliases
- {:poly {:extra-deps {polylith/clj-poly {:mvn/version "0.2.21"}}
+{:aliases
+ {:dev {:extra-paths ["components/auth/src"
+                      "components/profile/src"
+                      "components/questionnaire/src"
+                      "components/quiz-engine/src"
+                      "components/scoreboard/src"
+                      "components/streak/src"
+                      "bases/cli/src"]
+        :extra-deps {org.clojure/clojure {:mvn/version "1.12.0"}}}
+
+  :test {:extra-paths ["components/auth/test"
+                       "components/profile/test"
+                       "components/questionnaire/test"
+                       "components/quiz-engine/test"
+                       "components/scoreboard/test"
+                       "components/streak/test"
+                       "bases/cli/test"]}
+
+  :cli {:main-opts  ["-m" "smartybit-quiz.cli.core"]
+        :extra-deps {cli/quiz {:local/root "projects/cli"}}}
+
+  :poly {:extra-deps {polylith/clj-poly {:mvn/version "0.2.21"}}
          :main-opts  ["-m" "polylith.clj.core.poly-cli.core"]}
-  :run-m {:main-opts ["-m" "dev.curiousprogrammer.smartybit-quiz"]}
-  :run-x {:ns-default dev.curiousprogrammer.smartybit-quiz
-          :exec-fn greet
-          :exec-args {:name "Clojure"}}
-  :build {:deps {io.github.seancorfield/build-clj
-                 {:git/tag "v0.6.3" :git/sha "9b8e09b"
-                  ;; since we're building an app uberjar, we do not
-                  ;; need deps-deploy for clojars.org deployment:
-                  :deps/root "slim"}}
-          :ns-default build}
-  :test {:extra-paths ["test"]
-         :extra-deps {org.clojure/test.check {:mvn/version "1.1.1"}
-                      io.github.cognitect-labs/test-runner
-                      {:git/tag "v0.5.0" :git/sha "48c3c67"}}}}}
+
+  :outdated {:main-opts ["-m" "antq.core"]
+             :extra-deps {com.github.liquidz/antq {:mvn/version "2.11.1260"}}}}}
