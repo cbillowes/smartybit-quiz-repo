@@ -19,6 +19,13 @@
   :cli {:main-opts  ["-m" "smartybit-quiz.cli.core"]
         :extra-deps {cli/quiz {:local/root "projects/cli"}}}
 
+  :repl
+  {:exec-fn clojure.core.server/start-server
+   :exec-args {:name "repl-server"
+               :port 5555
+               :accept clojure.core.server/repl
+               :server-daemon false}}
+
   :poly {:extra-deps {polylith/clj-poly {:mvn/version "0.2.21"}}
          :main-opts  ["-m" "polylith.clj.core.poly-cli.core"]}
 
