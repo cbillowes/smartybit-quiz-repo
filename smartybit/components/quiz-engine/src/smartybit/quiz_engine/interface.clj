@@ -1,5 +1,6 @@
 (ns smartybit.quiz-engine.interface
-  (:require [smartybit.quiz-engine.next-question :as nq]))
+  (:require [smartybit.quiz-engine.next-question :as nq]
+            [smartybit.quiz-engine.validator :as v]))
 
 
 (defn fetch-next-question
@@ -14,3 +15,14 @@
   [questions & {:keys [questionnaire difficulty]
                 :or {questionnaire [] difficulty :trivial}}]
   (nq/fetch-next-question questions :questionnaire questionnaire :difficulty difficulty))
+
+
+(defn validate-answer
+  "Validates the answer to a question.
+
+   Returns a map with the result of the validation which includes:
+   - correct? true if the answer is correct, false otherwise.
+   - explanation: a string with the explanation of the answer.
+   - answer: the expected correct answer."
+  [question answer]
+  (v/validate-answer question answer))

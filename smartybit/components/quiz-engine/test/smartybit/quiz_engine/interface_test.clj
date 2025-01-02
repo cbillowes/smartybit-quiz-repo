@@ -57,3 +57,23 @@
                          {:id 7 :text "What is the capital of Brazil?" :difficulty :tricky}]
           result (sut/fetch-next-question questions :questionnaire questionnaire :difficulty :easy)]
       (is (nil? result)))))
+
+
+(deftest test-validate-answer
+  (testing "The answer is correct"
+    (let [question {:text "What is the capital of Sweden?"
+                    :answer "Stockholm"}
+          result (sut/validate-answer question "Stockholm")]
+      (is (= result {:correct? true
+                     :explanation nil
+                     :answer "Stockholm"}))))
+
+
+  (testing "The answer is incorrect"
+    (let [question {:text "What is the capital of Sweden?"
+                    :explanation "Stockholm is the capital of Sweden."
+                    :answer "Stockholm"}
+          result (sut/validate-answer question "Something")]
+      (is (= result {:correct? false
+                     :explanation "Stockholm is the capital of Sweden."
+                     :answer "Stockholm"})))))
