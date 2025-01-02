@@ -1,6 +1,7 @@
 (ns smartybit.quiz-engine.interface
   (:require [smartybit.quiz-engine.next-question :as nq]
-            [smartybit.quiz-engine.validator :as v]))
+            [smartybit.quiz-engine.validator :as v]
+            [smartybit.quiz-engine.score :as s]))
 
 
 (defn fetch-next-question
@@ -23,6 +24,19 @@
    Returns a map with the result of the validation which includes:
    - correct? true if the answer is correct, false otherwise.
    - explanation: a string with the explanation of the answer.
-   - answer: the expected correct answer."
+   - answer: the expected correct answer.
+   - score: the score of the question."
   [question answer]
   (v/validate-answer question answer))
+
+
+(defn score-questionnaire
+  "Scores the answers in a given questionnaire.
+   - Each question should contain at least the following keys:
+     - :actual-answer: the correct answer.
+     - :input-answer: the answer given by the player.
+     - :score: the score of the question.
+
+   Returns the score at that point of the questionnaire."
+  [questionnaire]
+  (s/score-questionnaire questionnaire))

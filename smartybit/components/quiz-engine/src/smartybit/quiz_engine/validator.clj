@@ -3,15 +3,17 @@
 
 (defn validate-answer
   [question answer]
-  {:correct? (= (:answer question) answer)
-   :explanation (:explanation question)
-   :answer (:answer question)})
+  (let [correct? (= (:actual-answer question) answer)]
+    {:correct? correct?
+     :explanation (:explanation question "")
+     :score (if correct? (:score question 1) 0)
+     :answer (:actual-answer question)}))
 
 
 (comment
 
   (validate-answer
-   {:id 0 :text "What is the capital of Sweden?" :answer "Stockholm"}
+   {:id 0 :text "What is the capital of Sweden?" :actual-answer "Stockholm"}
    "Stockholm")
 
 
