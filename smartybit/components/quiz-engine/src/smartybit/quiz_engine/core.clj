@@ -2,6 +2,8 @@
 
 
 (defn fetch-next-question
-  [questions & {:keys [index]}]
-  (let [next-index (inc index)]
+  [questions & {:keys [index direction]}]
+  (let [next-index (if (= direction :forward)
+                     (inc index)
+                     (dec index))]
     (get questions next-index)))

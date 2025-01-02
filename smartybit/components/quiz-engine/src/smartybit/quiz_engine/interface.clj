@@ -3,5 +3,6 @@
 
 
 (defn fetch-next-question
-  [questions & {:keys [index]}]
-  (core/fetch-next-question questions :index index))
+  [questions & {:keys [index direction]
+                :or {index -1 direction :forward}}]
+  (core/fetch-next-question questions :index index :direction direction))
