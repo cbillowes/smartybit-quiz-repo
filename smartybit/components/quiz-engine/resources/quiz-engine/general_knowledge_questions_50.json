@@ -1,0 +1,604 @@
+{
+  "questions": [
+    {
+      "text": "Which country is known as the 'Land of the Rising Sun'?",
+      "answers": [
+        "Japan",
+        "China",
+        "India",
+        "South Korea"
+      ],
+      "correct-answer": "Japan",
+      "difficulty": 3,
+      "score": 89
+    },
+    {
+      "text": "What is the first element on the periodic table?",
+      "answers": [
+        "Hydrogen",
+        "Helium",
+        "Lithium",
+        "Oxygen"
+      ],
+      "correct-answer": "Hydrogen",
+      "difficulty": 3,
+      "score": 89
+    },
+    {
+      "text": "What is the chemical symbol for gold?",
+      "answers": [
+        "Au",
+        "Ag",
+        "Pt",
+        "Pb"
+      ],
+      "correct-answer": "Au",
+      "difficulty": 3,
+      "score": 70
+    },
+    {
+      "text": "What is the capital of Japan?",
+      "answers": [
+        "Tokyo",
+        "Seoul",
+        "Beijing",
+        "Bangkok"
+      ],
+      "correct-answer": "Tokyo",
+      "difficulty": 2,
+      "score": 7
+    },
+    {
+      "text": "Which element has the chemical symbol 'O'?",
+      "answers": [
+        "Oxygen",
+        "Gold",
+        "Osmium",
+        "Opium"
+      ],
+      "correct-answer": "Oxygen",
+      "difficulty": 3,
+      "score": 71
+    },
+    {
+      "text": "Who wrote 'Romeo and Juliet'?",
+      "answers": [
+        "William Shakespeare",
+        "Charles Dickens",
+        "Jane Austen",
+        "George Orwell"
+      ],
+      "correct-answer": "William Shakespeare",
+      "difficulty": 5,
+      "score": 84
+    },
+    {
+      "text": "What is the name of the famous clock tower in London?",
+      "answers": [
+        "Big Ben",
+        "Tower of London",
+        "London Eye",
+        "Buckingham Tower"
+      ],
+      "correct-answer": "Big Ben",
+      "difficulty": 2,
+      "score": 52
+    },
+    {
+      "text": "Which language is the most spoken in the world?",
+      "answers": [
+        "Mandarin Chinese",
+        "English",
+        "Spanish",
+        "Hindi"
+      ],
+      "correct-answer": "Mandarin Chinese",
+      "difficulty": 4,
+      "score": 32
+    },
+    {
+      "text": "What is the official language of Brazil?",
+      "answers": [
+        "Portuguese",
+        "Spanish",
+        "English",
+        "French"
+      ],
+      "correct-answer": "Portuguese",
+      "difficulty": 5,
+      "score": 15
+    },
+    {
+      "text": "What is the speed of light?",
+      "answers": [
+        "299,792 km/s",
+        "150,000 km/s",
+        "300,000 km/s",
+        "299,792 m/s"
+      ],
+      "correct-answer": "299,792 km/s",
+      "difficulty": 3,
+      "score": 50
+    },
+    {
+      "text": "Who discovered gravity?",
+      "answers": [
+        "Isaac Newton",
+        "Albert Einstein",
+        "Galileo Galilei",
+        "Nikola Tesla"
+      ],
+      "correct-answer": "Isaac Newton",
+      "difficulty": 3,
+      "score": 21
+    },
+    {
+      "text": "What is the tallest mountain in the world?",
+      "answers": [
+        "K2",
+        "Everest",
+        "Denali",
+        "Kilimanjaro"
+      ],
+      "correct-answer": "Everest",
+      "difficulty": 3,
+      "score": 75
+    },
+    {
+      "text": "Who developed the theory of relativity?",
+      "answers": [
+        "Albert Einstein",
+        "Isaac Newton",
+        "Galileo Galilei",
+        "Niels Bohr"
+      ],
+      "correct-answer": "Albert Einstein",
+      "difficulty": 5,
+      "score": 51
+    },
+    {
+      "text": "Which is the smallest ocean in the world?",
+      "answers": [
+        "Arctic",
+        "Indian",
+        "Atlantic",
+        "Pacific"
+      ],
+      "correct-answer": "Arctic",
+      "difficulty": 1,
+      "score": 71
+    },
+    {
+      "text": "What is the square root of 64?",
+      "answers": [
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "correct-answer": "8",
+      "difficulty": 3,
+      "score": 55
+    },
+    {
+      "text": "Which instrument measures atmospheric pressure?",
+      "answers": [
+        "Barometer",
+        "Thermometer",
+        "Anemometer",
+        "Hygrometer"
+      ],
+      "correct-answer": "Barometer",
+      "difficulty": 3,
+      "score": 60
+    },
+    {
+      "text": "What is the largest mammal in the world?",
+      "answers": [
+        "Blue Whale",
+        "Elephant",
+        "Giraffe",
+        "Orca"
+      ],
+      "correct-answer": "Blue Whale",
+      "difficulty": 1,
+      "score": 100
+    },
+    {
+      "text": "What is the national dish of Spain?",
+      "answers": [
+        "Paella",
+        "Tacos",
+        "Pasta",
+        "Curry"
+      ],
+      "correct-answer": "Paella",
+      "difficulty": 4,
+      "score": 43
+    },
+    {
+      "text": "What is the capital of Canada?",
+      "answers": [
+        "Ottawa",
+        "Toronto",
+        "Montreal",
+        "Vancouver"
+      ],
+      "correct-answer": "Ottawa",
+      "difficulty": 1,
+      "score": 72
+    },
+    {
+      "text": "How many continents are there?",
+      "answers": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correct-answer": "7",
+      "difficulty": 5,
+      "score": 85
+    },
+    {
+      "text": "Who painted the Mona Lisa?",
+      "answers": [
+        "Leonardo da Vinci",
+        "Pablo Picasso",
+        "Vincent van Gogh",
+        "Claude Monet"
+      ],
+      "correct-answer": "Leonardo da Vinci",
+      "difficulty": 3,
+      "score": 43
+    },
+    {
+      "text": "Which continent is known as the 'Dark Continent'?",
+      "answers": [
+        "Africa",
+        "Asia",
+        "Australia",
+        "Europe"
+      ],
+      "correct-answer": "Africa",
+      "difficulty": 5,
+      "score": 49
+    },
+    {
+      "text": "What is the currency of the United Kingdom?",
+      "answers": [
+        "Pound",
+        "Dollar",
+        "Euro",
+        "Yen"
+      ],
+      "correct-answer": "Pound",
+      "difficulty": 4,
+      "score": 99
+    },
+    {
+      "text": "What is 2+2?",
+      "answers": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correct-answer": "4",
+      "difficulty": 2,
+      "score": 88
+    },
+    {
+      "text": "Who directed the movie 'Titanic'?",
+      "answers": [
+        "James Cameron",
+        "Steven Spielberg",
+        "Christopher Nolan",
+        "Martin Scorsese"
+      ],
+      "correct-answer": "James Cameron",
+      "difficulty": 3,
+      "score": 8
+    },
+    {
+      "text": "Who invented the telephone?",
+      "answers": [
+        "Alexander Graham Bell",
+        "Thomas Edison",
+        "Nikola Tesla",
+        "James Watt"
+      ],
+      "correct-answer": "Alexander Graham Bell",
+      "difficulty": 3,
+      "score": 72
+    },
+    {
+      "text": "Which is the largest organ in the human body?",
+      "answers": [
+        "Skin",
+        "Liver",
+        "Heart",
+        "Lungs"
+      ],
+      "correct-answer": "Skin",
+      "difficulty": 5,
+      "score": 50
+    },
+    {
+      "text": "What is the largest ocean on Earth?",
+      "answers": [
+        "Atlantic",
+        "Indian",
+        "Arctic",
+        "Pacific"
+      ],
+      "correct-answer": "Pacific",
+      "difficulty": 5,
+      "score": 54
+    },
+    {
+      "text": "What is the largest bone in the human body?",
+      "answers": [
+        "Femur",
+        "Tibia",
+        "Humerus",
+        "Skull"
+      ],
+      "correct-answer": "Femur",
+      "difficulty": 1,
+      "score": 26
+    },
+    {
+      "text": "What is the capital of Italy?",
+      "answers": [
+        "Rome",
+        "Venice",
+        "Milan",
+        "Florence"
+      ],
+      "correct-answer": "Rome",
+      "difficulty": 3,
+      "score": 74
+    },
+    {
+      "text": "Which country gifted the Statue of Liberty to the USA?",
+      "answers": [
+        "France",
+        "England",
+        "Germany",
+        "Italy"
+      ],
+      "correct-answer": "France",
+      "difficulty": 2,
+      "score": 41
+    },
+    {
+      "text": "What is the primary ingredient in guacamole?",
+      "answers": [
+        "Avocado",
+        "Tomato",
+        "Onion",
+        "Lime"
+      ],
+      "correct-answer": "Avocado",
+      "difficulty": 1,
+      "score": 41
+    },
+    {
+      "text": "Which famous scientist introduced the idea of natural selection?",
+      "answers": [
+        "Charles Darwin",
+        "Gregor Mendel",
+        "Alfred Wallace",
+        "Louis Pasteur"
+      ],
+      "correct-answer": "Charles Darwin",
+      "difficulty": 2,
+      "score": 62
+    },
+    {
+      "text": "What is the most abundant gas in the Earth's atmosphere?",
+      "answers": [
+        "Nitrogen",
+        "Oxygen",
+        "Carbon Dioxide",
+        "Argon"
+      ],
+      "correct-answer": "Nitrogen",
+      "difficulty": 1,
+      "score": 4
+    },
+    {
+      "text": "How many planets are in our solar system?",
+      "answers": [
+        "8",
+        "7",
+        "9",
+        "10"
+      ],
+      "correct-answer": "8",
+      "difficulty": 4,
+      "score": 58
+    },
+    {
+      "text": "Who was the first president of the United States?",
+      "answers": [
+        "George Washington",
+        "Abraham Lincoln",
+        "Thomas Jefferson",
+        "John Adams"
+      ],
+      "correct-answer": "George Washington",
+      "difficulty": 2,
+      "score": 53
+    },
+    {
+      "text": "Which planet is known as the Red Planet?",
+      "answers": [
+        "Mars",
+        "Venus",
+        "Jupiter",
+        "Saturn"
+      ],
+      "correct-answer": "Mars",
+      "difficulty": 1,
+      "score": 42
+    },
+    {
+      "text": "Which planet is closest to the sun?",
+      "answers": [
+        "Mercury",
+        "Venus",
+        "Earth",
+        "Mars"
+      ],
+      "correct-answer": "Mercury",
+      "difficulty": 1,
+      "score": 72
+    },
+    {
+      "text": "Who discovered penicillin?",
+      "answers": [
+        "Alexander Fleming",
+        "Marie Curie",
+        "Louis Pasteur",
+        "Joseph Lister"
+      ],
+      "correct-answer": "Alexander Fleming",
+      "difficulty": 1,
+      "score": 20
+    },
+    {
+      "text": "What is the chemical symbol for water?",
+      "answers": [
+        "H2O",
+        "O2",
+        "CO2",
+        "NaCl"
+      ],
+      "correct-answer": "H2O",
+      "difficulty": 2,
+      "score": 65
+    },
+    {
+      "text": "What is the boiling point of water in Celsius?",
+      "answers": [
+        "100",
+        "90",
+        "80",
+        "120"
+      ],
+      "correct-answer": "100",
+      "difficulty": 1,
+      "score": 42
+    },
+    {
+      "text": "What is the capital of France?",
+      "answers": [
+        "Paris",
+        "Berlin",
+        "Madrid",
+        "Rome"
+      ],
+      "correct-answer": "Paris",
+      "difficulty": 5,
+      "score": 16
+    },
+    {
+      "text": "Which bird is a universal symbol of peace?",
+      "answers": [
+        "Dove",
+        "Eagle",
+        "Swan",
+        "Sparrow"
+      ],
+      "correct-answer": "Dove",
+      "difficulty": 4,
+      "score": 82
+    },
+    {
+      "text": "What is the hardest natural substance on Earth?",
+      "answers": [
+        "Gold",
+        "Diamond",
+        "Iron",
+        "Platinum"
+      ],
+      "correct-answer": "Diamond",
+      "difficulty": 5,
+      "score": 14
+    },
+    {
+      "text": "What is the smallest planet in our solar system?",
+      "answers": [
+        "Mercury",
+        "Mars",
+        "Venus",
+        "Pluto"
+      ],
+      "correct-answer": "Mercury",
+      "difficulty": 3,
+      "score": 55
+    },
+    {
+      "text": "What is the capital of Australia?",
+      "answers": [
+        "Sydney",
+        "Melbourne",
+        "Canberra",
+        "Brisbane"
+      ],
+      "correct-answer": "Canberra",
+      "difficulty": 5,
+      "score": 76
+    },
+    {
+      "text": "What is the chemical formula for salt?",
+      "answers": [
+        "NaCl",
+        "HCl",
+        "KCl",
+        "MgCl"
+      ],
+      "correct-answer": "NaCl",
+      "difficulty": 1,
+      "score": 33
+    },
+    {
+      "text": "In what year did the Titanic sink?",
+      "answers": [
+        "1912",
+        "1905",
+        "1923",
+        "1898"
+      ],
+      "correct-answer": "1912",
+      "difficulty": 2,
+      "score": 68
+    },
+    {
+      "text": "What is the national flower of Japan?",
+      "answers": [
+        "Cherry Blossom",
+        "Rose",
+        "Tulip",
+        "Lotus"
+      ],
+      "correct-answer": "Cherry Blossom",
+      "difficulty": 4,
+      "score": 57
+    },
+    {
+      "text": "What is the name of the longest river in the world?",
+      "answers": [
+        "Amazon",
+        "Nile",
+        "Yangtze",
+        "Mississippi"
+      ],
+      "correct-answer": "Amazon",
+      "difficulty": 2,
+      "score": 13
+    }
+  ]
+}
