@@ -3,49 +3,57 @@
             [smartybit.quiz-engine.interface :as sut]))
 
 
-(deftest test-fetch-next-question
-  (testing "Returns the first question when attributes are not provided"
-    (let [questions [{:text "What is the capital of France?"}
-                     {:text "What is the capital of Mauritius?"}
-                     {:text "What is the capital of Germany?"}
-                     {:text "What is the capital of Italy?"}]
-          result (sut/fetch-next-question questions)]
-      (is (= (:text result) "What is the capital of France?"))))
+;; This is a pool of questions that are available for the quiz.
+;; Each question has a difficulty level associated with it.
+;; The questionnaire that gets completed evolves based on the difficulty level of the questions.
+;; The questions that have been visited will not change.
+;; The future questions will be fetched with the following rules:
+;; - The next question is harder than the previous question.
+;; - The next question is possibly easier than the previous question if the pool is depleted of harder questions.
+;; - The next question is not repeated.
+
+(def questions [{:id 0 :text "What is the capital of Sweden?" :difficulty :trivial}
+                {:id 1 :text "What is the capital of France?" :difficulty :trivial}
+                {:id 2 :text "What is the capital of Mauritius?" :difficulty :easy}
+                {:id 3 :text "What is the capital of Germany?" :difficulty :easy}
+                {:id 4 :text "What is the capital of Italy?" :difficulty :medium}
+                {:id 5 :text "What is the capital of Japan?" :difficulty :hard}
+                {:id 6 :text "What is the capital of Australia?" :difficulty :tricky}
+                {:id 7 :text "What is the capital of Brazil?" :difficulty :tricky}])
 
 
-  (testing "Can fetch the next question in the list (moving forward)"
-    (let [questions [{:text "What is the capital of France?"}
-                     {:text "What is the capital of Mauritius?"}
-                     {:text "What is the capital of Germany?"} ;; <- (index 2) we are here
-                     {:text "What is the capital of Italy?"}]
-          result (sut/fetch-next-question questions :index 2 :direction :forward)]
-      (is (= (:text result) "What is the capital of Italy?"))))
+(deftest test-fetch-next-question-by-adjusting-difficulty
+  (testing "Returns only questions with the specified difficulty"
+    (let [result (sut/fetch-next-question questions :difficulty :easy)]
+      (is (= (:difficulty result) :easy))))
 
 
-  (testing "Can fetch the next question in the list (moving backward)"
-    (let [questions [{:text "What is the capital of France?"}
-                     {:text "What is the capital of Mauritius?"}
-                     {:text "What is the capital of Germany?"} ;; <- (index 2) we are here
-                     {:text "What is the capital of Italy?"}]
-          result (sut/fetch-next-question questions :index 2 :direction :backward)]
-      (is (= (:text result) "What is the capital of Mauritius?"))))
+  (testing "No more questions for that difficulty. Go to the next difficulty and return a random question."
+   (let [questionnaire [{:id 2 :text "What is the capital of Mauritius?" :difficulty :easy}
+                        {:id 3 :text "What is the capital of Germany?" :difficulty :easy}]
+         result (sut/fetch-next-question questions :questionnaire questionnaire :difficulty :easy)]
+     (is (= (:difficulty result) :medium))))
 
 
-  (testing "Returns nil when the next question is out of bounds (moving forward)"
-    (let [questions [{:text "What is the capital of France?"}
-                     {:text "What is the capital of Mauritius?"}
-                     {:text "What is the capital of Germany?"}
-                     {:text "What is the capital of Italy?"} ;; <- (index 3) we are here
-                     ]
-          result (sut/fetch-next-question questions :index 3 :direction :forward)]
-      (is (nil? result))))
+  (testing "No more questions for that difficulty nor any going up. Only lower difficulty levels are available."
+    (let [questionnaire [{:id 2 :text "What is the capital of Mauritius?" :difficulty :easy}
+                         {:id 3 :text "What is the capital of Germany?" :difficulty :easy}
+                         {:id 4 :text "What is the capital of Italy?" :difficulty :medium}
+                         {:id 5 :text "What is the capital of Japan?" :difficulty :hard}
+                         {:id 6 :text "What is the capital of Australia?" :difficulty :tricky}
+                         {:id 7 :text "What is the capital of Brazil?" :difficulty :tricky}]
+          result (sut/fetch-next-question questions :questionnaire questionnaire :difficulty :easy)]
+      (is (= (:difficulty result) :trivial))))
 
 
-  (testing "Returns nil when the next question is out of bounds (moving backward)"
-    (let [questions [{:text "What is the capital of France?"} ;; <- (index 0) we are here
-                     {:text "What is the capital of Mauritius?"}
-                     {:text "What is the capital of Germany?"}
-                     {:text "What is the capital of Italy?"}
-                     ]
-          result (sut/fetch-next-question questions :index 0 :direction :backward)]
+  (testing "No more questions. Return nil."
+    (let [questionnaire [{:id 0 :text "What is the capital of Sweden?" :difficulty :trivial}
+                         {:id 1 :text "What is the capital of France?" :difficulty :trivial}
+                         {:id 2 :text "What is the capital of Mauritius?" :difficulty :easy}
+                         {:id 3 :text "What is the capital of Germany?" :difficulty :easy}
+                         {:id 4 :text "What is the capital of Italy?" :difficulty :medium}
+                         {:id 5 :text "What is the capital of Japan?" :difficulty :hard}
+                         {:id 6 :text "What is the capital of Australia?" :difficulty :tricky}
+                         {:id 7 :text "What is the capital of Brazil?" :difficulty :tricky}]
+          result (sut/fetch-next-question questions :questionnaire questionnaire :difficulty :easy)]
       (is (nil? result)))))
