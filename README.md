@@ -70,20 +70,20 @@ I created the project as follows:
 
 1. You can now start a REPL server, run the Polylith CLI and check if dependencies are outdated using the following commands:
 
-   | Command           | Description                        |
-   | ----------------- | ---------------------------------- |
-   | `clj -M:dev`      | Create a development environment   |
-   | `clj -M:test`     | Run the tests                      |
-   | `clj -M:repl`     | Start a REPL server                |
-   | `clj -M:poly`     | Run the Polylith CLI               |
-   | `clj -M:outdated` | Check if dependencies are outdated |
+   | Command                 | Description                        |
+   | ----------------------- | ---------------------------------- |
+   | `clj -M:dev`            | Create a development environment   |
+   | `clj -M:poly test :dev` | Run the tests                      |
+   | `clj -M:repl`           | Start a REPL server                |
+   | `clj -M:poly`           | Run the Polylith CLI               |
+   | `clj -M:outdated`       | Check if dependencies are outdated |
 
 1. Run `clj -M:outdated` to check for outdated dependencies.
 1. Update `deps.edn` with the latest dependencies, if necessary.
 
 ## Creating Components
 
-1. The **Quiz Engine** is the heart of Smartybit, so we will start here.
+1. The **Quiz Engine** is the heart of Smartybit, so we will start here. We are going to interact with the data using the REPL first. We won't start with outside constructs and we'll mock as much as we need to to get started.
 
    ```bash
    cd smartybit # if you are not already in the directory
