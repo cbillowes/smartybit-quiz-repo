@@ -1,4 +1,4 @@
-(ns smartybit.quiz-engine.core)
+(ns smartybit.quiz-engine.next-question)
 
 
 (def ^:private difficulty-levels [:any :trivial :easy :medium :hard :tricky])

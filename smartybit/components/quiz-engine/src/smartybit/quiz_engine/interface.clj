@@ -1,5 +1,5 @@
 (ns smartybit.quiz-engine.interface
-  (:require [smartybit.quiz-engine.core :as core]))
+  (:require [smartybit.quiz-engine.next-question :as nq]))
 
 
 (defn fetch-next-question
@@ -13,4 +13,4 @@
    Returns the next question or nil if the next question is out of bounds."
   [questions & {:keys [questionnaire difficulty]
                 :or {questionnaire [] difficulty :trivial}}]
-  (core/fetch-next-question questions :questionnaire questionnaire :difficulty difficulty))
+  (nq/fetch-next-question questions :questionnaire questionnaire :difficulty difficulty))
