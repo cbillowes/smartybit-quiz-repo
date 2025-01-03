@@ -9,13 +9,13 @@
    The function takes a list of questions and an optional map of attributes.
 
    The attributes are:
-   - :questionnaire (default []): The complete questionnaire for the player with the questions that have already been visited.
+   - :quiz (default []): The completed quiz at this point in time for the player (visited questions).
    - :difficulty (default :trivial): The difficulty level of the question: (:trivial, :easy, :medium, :hard, :tricky).
 
    Returns the next question or nil if the next question is out of bounds."
-  [questions & {:keys [questionnaire difficulty]
-                :or {questionnaire [] difficulty :trivial}}]
-  (nq/fetch-next-question questions :questionnaire questionnaire :difficulty difficulty))
+  [questions & {:keys [quiz difficulty index]
+                :or {quiz [] difficulty :trivial index -1}}]
+  (nq/fetch-next-question questions :quiz quiz :difficulty difficulty :index index))
 
 
 (defn validate-answer

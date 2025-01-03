@@ -1,13 +1,26 @@
 (ns smartybit-quiz.questionnaire.core
-  (:require [smartybit-quiz.questionnaire.entities :as e]))
+  (:require [smartybit-quiz.questionnaire.entities :as e]
+            [smartybit-quiz.questionnaire.repositories.core :as repository]
+            [jsonista.core :as j]))
 
 
-(defonce questionnaires (atom []))
+(defn get-all-questionnaires
+  [repo]
+  {:pre [(satisfies? repository/QuestionnaireRepository repo)]}
+
+  (repository/get-questionnaires repo))
 
 
-(defn create
-  [json-str]
-  (let [questionnaire (e/str->questionnaire json-str)]
-    (swap! questionnaires conj questionnaire)
-    questionnaire))
+(defn save-questionnaire
+  [repo json-str]
+  {:pre [(satisfies? repository/QuestionnaireRepository repo)]}
 
+  (let [data (j/read-value json-str j/keyword-keys-object-mapper)
+        {:keys [id]} data]
+
+    (when id
+      (throw (ex-info "This questionnaire already has an ID.")))
+
+    (repository/save-questionnaire repo (-> data
+                                            (assoc :id (java.util.UUID/randomUUID))
+                                            (e/serialize-questionnaire)))))

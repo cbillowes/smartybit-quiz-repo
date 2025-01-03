@@ -1,8 +1,6 @@
 (ns smartybit-quiz.questionnaire.entities
-  (:require [jsonista.core :as j]
-            [malli.core :as m]
-            [malli.error :as me]
-            [malli.generator :as mg]))
+  (:require [malli.core :as m]
+            [malli.error :as me]))
 
 
 (def ^:private Attachment
@@ -67,9 +65,7 @@
     true))
 
 
-(defn str->questionnaire
-  [value]
-  (let [questionnaire (merge (mg/generate Questionnaire)
-                             (j/read-value value j/keyword-keys-object-mapper))]
-    (when (valid-questionnaire? questionnaire)
-      questionnaire)))
+(defn serialize-questionnaire
+  [data]
+  (when (valid-questionnaire? data)
+    data))
