@@ -3,139 +3,32 @@
             [smartybit.quiz-engine.interface :as sut]))
 
 
-;; There is a pool of questions that are available for a quiz that is curated on the fly.
-;; Each question has a difficulty level associated with it & the quiz adapts to it.
-;; The next question will be fetched with the following rules:
-;; - The questions are selected randomly from the pool of available questions.
-;; - The question is removed from the pool when it is picked to ensure it is never repeated.
-;; - The first question is always a trivial question.
-;; - The next question is harder than the previous question.
-;; - The next question is easier than the previous question if answered incorrectly.
-;; - The next question is possibly easier than the previous question if the pool is depleted of harder questions.
+(deftest test-fetch-next-question-to-start-the-quiz
+  (let [state {:pool [{:id "1" :text "What is the first item in the period table?" :difficulty :trivial :score 1 :answer "Hydrogen"}
+                      {:id "2" :text "What is the second item in the period table?" :difficulty :easy :score 1 :answer "Helium"}
+                      {:id "3" :text "What is the third item in the period table?" :difficulty :medium :score 1 :answer "Lithium"}
+                      {:id "4" :text "What is the fourth item in the period table?" :difficulty :hard :score 1 :answer "Beryllium"}
+                      {:id "5" :text "What is the fifth item in the period table?" :difficulty :tricky :score 1 :answer "Boron"}]
+               :quiz []
+               :score 0
+               :streak 0}
+        user-input {} ;; Nothing happened yet
+        {:keys [pool quiz next-question score streak]} (sut/fetch-next-question state user-input)]
+    (testing "A trivial question should be returned"
+      (is (= :trivial (:difficulty next-question))))
 
-;; A place to store a list of questions we can use to curate a quiz.
-;; (def ^:private question-pool [{:id 0 :text "What is the capital of Sweden?" :difficulty :trivial :answer "Stockholm"}
-;;                               {:id 1 :text "What is the capital of France?" :difficulty :trivial :answer "Paris"}
-;;                               {:id 2 :text "What is the capital of Mauritius?" :difficulty :easy :answer "Port Louis"}
-;;                               {:id 3 :text "What is the capital of Germany?" :difficulty :easy :answer "Berlin"}
-;;                               {:id 4 :text "What is the capital of Italy?" :difficulty :medium :answer "Rome"}
-;;                               {:id 5 :text "What is the capital of Japan?" :difficulty :hard :answer "Tokyo"}
-;;                               {:id 6 :text "What is the capital of Australia?" :difficulty :tricky :answer "Canberra"}
-;;                               {:id 7 :text "What is the capital of Brazil?" :difficulty :tricky :answer "Brasília"}])
+    (testing "The question should be in the quiz"
+      (is (= [{:id "1" :text "What is the first item in the period table?" :difficulty :trivial :score 1 :answer "Hydrogen"}]
+             quiz)))
 
+    (testing "The question should be removed from the pool"
+      (is (= [;; removed from pool => {:id "1" :text "What is the first item in the period table?" :difficulty :trivial :score 1 :answer "Hydrogen"}
+              {:id "2" :text "What is the second item in the period table?" :difficulty :easy :score 1 :answer "Helium"}
+              {:id "3" :text "What is the third item in the period table?" :difficulty :medium :score 1 :answer "Lithium"}
+              {:id "4" :text "What is the fourth item in the period table?" :difficulty :hard :score 1 :answer "Beryllium"}
+              {:id "5" :text "What is the fifth item in the period table?" :difficulty :tricky :score 1 :answer "Boron"}]
+             pool)))
 
-;; (deftest test-quiz-curation
-;;   (testing "Should score answer correctly"
-;;     (let [state []
-;;           actual (sut/score-question state 0 {:id 1 :answer "Paris"})]
-;;       (is (= {:score 0
-;;               :total 0
-;;               :percentage 0}
-;;              actual))))
-
-
-;;   )
-
-
-
-
-
-;; (deftest test-fetch-next-question-by-adjusting-difficulty2
-;;   (testing "Returns only questions with the specified difficulty"
-;;     (let [result (sut/fetch-next-question question-pool :difficulty :easy)]
-;;       (is (= :easy (:difficulty result)))))
-
-
-;;   (testing "No more questions for that difficulty. Go to the next difficulty and return a random question."
-;;    (let [questionnaire [{:id 2 :text "What is the capital of Mauritius?" :difficulty :easy}
-;;                         {:id 3 :text "What is the capital of Germany?" :difficulty :easy}]
-;;          result (sut/fetch-next-question question-pool :questionnaire questionnaire :difficulty :easy)]
-;;      (is (= :medium (:difficulty result)))))
-
-
-;;   (testing "No more questions for that difficulty nor any going up. Only lower difficulty levels are available."
-;;     (let [questionnaire [{:id 2 :text "What is the capital of Mauritius?" :difficulty :easy}
-;;                          {:id 3 :text "What is the capital of Germany?" :difficulty :easy}
-;;                          {:id 4 :text "What is the capital of Italy?" :difficulty :medium}
-;;                          {:id 5 :text "What is the capital of Japan?" :difficulty :hard}
-;;                          {:id 6 :text "What is the capital of Australia?" :difficulty :tricky}
-;;                          {:id 7 :text "What is the capital of Brazil?" :difficulty :tricky}]
-;;           result (sut/fetch-next-question question-pool :questionnaire questionnaire :difficulty :easy)]
-;;       (is (= :trivial (:difficulty result)))))
-
-
-;;   (testing "No more questions. Return nil."
-;;     (let [questionnaire [{:id 0 :text "What is the capital of Sweden?" :difficulty :trivial}
-;;                          {:id 1 :text "What is the capital of France?" :difficulty :trivial}
-;;                          {:id 2 :text "What is the capital of Mauritius?" :difficulty :easy}
-;;                          {:id 3 :text "What is the capital of Germany?" :difficulty :easy}
-;;                          {:id 4 :text "What is the capital of Italy?" :difficulty :medium}
-;;                          {:id 5 :text "What is the capital of Japan?" :difficulty :hard}
-;;                          {:id 6 :text "What is the capital of Australia?" :difficulty :tricky}
-;;                          {:id 7 :text "What is the capital of Brazil?" :difficulty :tricky}]
-;;           result (sut/fetch-next-question question-pool :questionnaire questionnaire :difficulty :easy)]
-;;       (is (nil? result)))))
-
-
-;; (deftest test-validate-answer
-;;   (testing "The answer is correct"
-;;     (let [question {:text "What is the capital of Sweden?"
-;;                     :actual-answer "Stockholm"}
-;;           result (sut/validate-answer question "Stockholm")]
-;;       (is (= {:correct? true
-;;               :explanation ""
-;;               :score 1
-;;               :answer "Stockholm"}
-;;              result))))
-
-
-;;   (testing "The answer is incorrect"
-;;     (let [question {:text "What is the capital of Sweden?"
-;;                     :explanation "Stockholm is the capital of Sweden."
-;;                     :actual-answer "Stockholm"}
-;;           result (sut/validate-answer question "Something")]
-;;       (is (= {:correct? false
-;;               :explanation "Stockholm is the capital of Sweden."
-;;               :score 0
-;;               :answer "Stockholm"}
-;;              result)))))
-
-
-;; (deftest test-score-questionnaire
-;;   (testing "Returns the score of the questionnaire with everything correct."
-;;     (let [questionnaire [{:text "What is the capital of Sweden?"
-;;                           :actual-answer "Stockholm"
-;;                           :input-answer "Stockholm"
-;;                           :score 3}
-;;                          {:text "What is the capital of France?"
-;;                           :actual-answer "Paris"
-;;                           :input-answer "Paris"
-;;                           :score 10}
-;;                          {:text "What is the capital of Mauritius?"
-;;                           :actual-answer "Port Louis"
-;;                           :input-answer "Port Louis"
-;;                           :score 1}]
-;;           result (sut/score-questionnaire questionnaire)]
-;;       (is (=  {:score 14
-;;                :total 14
-;;                :percentage 100}
-;;               result))))
-
-;;   (testing "Returns the score of the questionnaire with invalid answers."
-;;     (let [questionnaire [{:text "What is the capital of Sweden?"
-;;                           :actual-answer "Stockholm"
-;;                           :input-answer "Stockholm"
-;;                           :score 3}
-;;                          {:text "What is the capital of France?"
-;;                           :actual-answer "Paris"
-;;                           :input-answer "Unsure"
-;;                           :score 10}
-;;                          {:text "What is the capital of Mauritius?"
-;;                           :actual-answer "Port Louis"
-;;                           :input-answer "Port Louis"
-;;                           :score 1}]
-;;           result (sut/score-questionnaire questionnaire)]
-;;       (is (=  {:score 4
-;;                :total 14
-;;                :percentage 28}
-;;               result)))))
+    (testing "Defaults should remain in tact"
+      (is (= 0 score) "Score")
+      (is (= 0 streak) "Streak"))))

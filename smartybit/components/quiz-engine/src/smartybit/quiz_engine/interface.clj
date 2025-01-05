@@ -1,42 +1,35 @@
 (ns smartybit.quiz-engine.interface
-  (:require [smartybit.quiz-engine.next-question :as nq]
-            [smartybit.quiz-engine.validator :as v]
-            [smartybit.quiz-engine.score :as s]))
+  (:require [smartybit.quiz-engine.core :as core]))
 
 
 (defn fetch-next-question
-  "Fetches the next question in the list of questions.
-   The function takes a list of questions and an optional map of attributes.
+  "There is a pool of questions that are available for a quiz that is curated on the fly.
+   Each question has a difficulty level associated with it & the quiz adapts to it.
+   The next question will be fetched with the following rules:
+   - The questions are selected randomly from the pool of available questions.
+   - The question is removed from the pool when it is picked to ensure it is never repeated.
+   - The first question is always a trivial question.
+   - The next question is harder than the previous question.
+   - The next question is easier than the previous question if answered incorrectly.
+   - The next question is possibly easier than the previous question if the pool is depleted of harder questions.
 
-   The attributes are:
-   - :quiz (default []): The completed quiz at this point in time for the player (visited questions).
-   - :difficulty (default :trivial): The difficulty level of the question: (:trivial, :easy, :medium, :hard, :tricky).
+   Inputs:
+   - state: A map of the state of the current questionnaire with the following keys:
+      - :pool: A list of questions available for the quiz.
+      - :quiz: A list of questions that have been answered.
+      - :score: The current score of the quiz.
+      - :streak: The current streak of correct answers.
+   - user-input: A map of the user's input with the following keys:
+      - :id: The id of the question that the user is answering.
+      - :answer: The user's answer to the question.
 
-   Returns the next question or nil if the next question is out of bounds."
-  [questions & {:keys [quiz difficulty index]
-                :or {quiz [] difficulty :trivial index -1}}]
-  (nq/fetch-next-question questions :quiz quiz :difficulty difficulty :index index))
+   Returns a map of the state of the current questionnaire with the following keys:
+   - pool
+   - quiz
+   - score
+   - streak
+   - difficulty
+   - next-question"
+  [{:keys [pool quiz score streak] :as state} {:keys [id answer] :as user-input}]
+  (core/fetch-next-question state user-input))
 
-
-(defn validate-answer
-  "Validates the answer to a question.
-
-   Returns a map with the result of the validation which includes:
-   - correct? true if the answer is correct, false otherwise.
-   - explanation: a string with the explanation of the answer.
-   - answer: the expected correct answer.
-   - score: the score of the question."
-  [question answer]
-  (v/validate-answer question answer))
-
-
-(defn score-questionnaire
-  "Scores the answers in a given questionnaire.
-   - Each question should contain at least the following keys:
-     - :actual-answer: the correct answer.
-     - :input-answer: the answer given by the player.
-     - :score: the score of the question.
-
-   Returns the score at that point of the questionnaire."
-  [questionnaire]
-  (s/score-questionnaire questionnaire))
