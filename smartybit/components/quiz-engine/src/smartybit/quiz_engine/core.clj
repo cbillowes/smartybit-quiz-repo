@@ -5,62 +5,51 @@
 (def ^:private difficulty-levels [:any :trivial :easy :medium :hard :tricky])
 
 
-(defn- score-question [{:keys [pool quiz index user-question] :as state}]
-  (let [answered-question (get quiz index)
-        pool-question (->> pool (filter #(= (:id %) (:id answered-question))) first)
-        answered-quiz (assoc quiz index (assoc answered-question
-                                               :answer (:answer pool-question)
-                                               :correct? (= (:answer pool-question) (:answer user-question))))]
-    (merge state
-           {:user-question user-question
-            :quiz (if answered-question answered-quiz quiz)
-            :pool (remove #(= user-question %) pool)})))
-
-
-(defn- adjust-difficulty [difficulty crank-up?]
-  (let [index (.indexOf difficulty-levels difficulty)]
-    (if (> index (dec (count difficulty-levels)))
-      (get difficulty-levels 0)
-      (get difficulty-levels (if crank-up? (inc index) (dec index))))))
-
-
-(defn- filter-by-difficulty [{:keys [pool quiz index]}]
-  (let [difficulty (if (empty? quiz)
-                     :trivial
-                     (:difficulty (last quiz)))
-        next-questions (filter #(= (:difficulty %) difficulty) pool)]
-    {:pool pool :next-questions next-questions :quiz quiz :index index}))
-
-
-(defn- get-unique-questions [{:keys [pool quiz index]}]
-  (let [question (rand-nth pool)
-        quiz (conj quiz question)
-        pool (remove #(= question %) pool)]
-    {:quiz quiz :pool pool :index index}))
-
-
-(defn next-question [{:keys [pool quiz index user-question] :as state
-                      :or {pool [] quiz [] index 0}}]
-  (->> state
-       (score-question)
-       (filter-by-difficulty)
-       (get-unique-questions)))
+(defn answer-question [{:keys [quiz score streak] :as state
+                        :or {quiz [] score 0 streak 0}}
+                       {:keys [id answer]}]
+  (let [question (->> quiz
+                      (filter #(= (:id %) id))
+                      (first))
+        correct?  (= (:answer question) answer)
+        question (assoc question
+                        :correct? correct?
+                        :answer {:got answer :actual (:answer question)})]
+    (merge state {:quiz (map #(if (= (:id %) id) question %) quiz)
+                  :score (if (:correct? question) (+ score (:score question 0)) score)
+                  :correct? correct?
+                  :difficulty (:difficulty question)
+                  :streak (if (:correct? question) (inc streak) 0)})))
 
 
 
-(clojure.pprint/pprint
- (next-question
-  {:pool [{:id 0 :text "What is the capital of Sweden?" :difficulty :trivial :answer "Stockholm"}
-          {:id 2 :text "What is the capital of Mauritius?" :difficulty :easy :answer "Port Louis"}
-          {:id 3 :text "What is the capital of Germany?" :difficulty :easy :answer "Berlin"}
-          {:id 6 :text "What is the capital of Australia?" :difficulty :tricky :answer "Canberra"}
-          {:id 4 :text "What is the capital of Italy?" :difficulty :medium :answer "Rome"}
-          {:id 5 :text "What is the capital of Japan?" :difficulty :hard :answer "Tokyo"}
-          {:id 8 :text "What is the capital of France?" :difficulty :trivial :answer "Paris"}
-          {:id 7 :text "What is the capital of Brazil?" :difficulty :tricky :answer "Brasília"}]
-   :quiz []
-   :index 0
-   :user-question nil})
+(defn adjust-difficulty [{:keys [correct? difficulty] :as state
+                          :or {correct? false difficulty :any}}]
+  (let [difficulty (or difficulty :any)
+        index (.indexOf difficulty-levels difficulty)
+        new-index (if correct? (inc index) (dec index))]
+    (if (< new-index 1)
+      (merge state {:difficulty :trivial})
+      (if (>= new-index (count difficulty-levels))
+        (merge state {:difficulty :tricky})
+        (merge state {:difficulty (get difficulty-levels new-index)})))))
 
 
- )
+
+(defn pick-next-question [{:keys [pool difficulty] :as state}]
+  (let [question (->> pool
+                      (filter #(= (:difficulty %) difficulty))
+                      (rand-nth))
+        pool (remove #(= (:id %) (:id question)) pool)
+        quiz (conj (:quiz state) question)]
+    (merge state {:pool pool
+                  :quiz quiz
+                  :next-question question})))
+
+
+
+(defn fetch-next-question [{:keys [pool quiz score streak] :as state} {:keys [id answer] :as user-input}]
+  (-> state
+      (answer-question user-input)
+      (adjust-difficulty)
+      (pick-next-question)))
