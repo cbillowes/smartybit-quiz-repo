@@ -5,6 +5,10 @@
 (def ^:private difficulty-levels [:any :trivial :easy :medium :hard :tricky])
 
 
+(defn current-time-in-millis []
+  (System/currentTimeMillis))
+
+
 (defn answer-question [{:keys [quiz score streak] :as state
                         :or {quiz [] score 0 streak 0}}
                        {:keys [id answer]}]
@@ -15,9 +19,11 @@
           correct?  (= (:answer question) answer)
           question (assoc question
                           :correct? correct?
-                          :answer {:got answer :actual (:answer question)})]
+                          :answer {:got answer :actual (:answer question)}
+                          :answered-at (current-time-in-millis))
+          score (if (:correct? question) (+ score (:score question 0)) score)]
       (merge state {:quiz (map #(if (= (:id %) id) question %) quiz)
-                    :score (if (:correct? question) (+ score (:score question 0)) score)
+                    :score score
                     :advance? correct?
                     :difficulty (:difficulty question)
                     :streak (if (:correct? question) (inc streak) 0)}))
@@ -28,7 +34,8 @@
 
 
 (defn get-next-difficulty [difficulty advance?]
-  (let [index (.indexOf difficulty-levels difficulty)]
+  (let [difficulty (or difficulty (first difficulty-levels))
+        index (.indexOf difficulty-levels difficulty)]
     (if advance?
       (if (>= index (dec (count difficulty-levels)))
         (get difficulty-levels 1) ;; skip the :any difficulty level
@@ -65,9 +72,9 @@
                   :next-question question})))
 
 
-
 (defn fetch-next-question [{:keys [pool quiz score streak] :as state} {:keys [id answer] :as user-input}]
   (-> state
       (answer-question user-input)
       (adjust-difficulty)
-      (pick-next-question)))
+      (pick-next-question)
+      (assoc-in [:next-question :picked-at] (current-time-in-millis))))

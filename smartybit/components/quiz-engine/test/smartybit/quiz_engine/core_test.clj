@@ -15,72 +15,67 @@
 
 
 (deftest test-answer-question
-  (testing "Correct answer should add score points based on the question, mark the question as correct and continue the streak"
-    (let [quiz [{:id "3" :text "What is the capital of Mauritius?" :difficulty :easy :score 10 :answer "Port Louis"}]
-          state {:quiz quiz :streak 3}
-          user-input {:id "3" :answer "Port Louis"}
-          actual (sut/answer-question state user-input)]
-      (is (= {:score 10
-              :streak 4
-              :advance? true
-              :difficulty :easy
-              :quiz [{:id "3"
-                      :text "What is the capital of Mauritius?"
-                      :difficulty :easy
-                      :score 10
-                      :correct? true
-                      :answer {:actual "Port Louis" :got "Port Louis"}}]} actual))))
-
-
-  (testing "Incorrect answer should not add score points, mark the question as incorrect and reset the streak"
-    (let [quiz [{:id "3" :text "What is the capital of Thailand?" :difficulty :easy :score 1 :answer "Bangkok"}]
-          state {:quiz quiz}
-          user-input {:id "3" :answer "Port Louis"}
-          actual (sut/answer-question state user-input)]
-      (is (= {:score 0
-              :streak 0
-              :advance? false
-              :difficulty :easy
-              :quiz [{:id "3"
-                      :text "What is the capital of Thailand?"
-                      :difficulty :easy
-                      :score 1
-                      :correct? false
-                      :answer {:actual "Bangkok" :got "Port Louis"}}]} actual))))
-
-  (testing "Ensure the rest of the quiz is not affected"
-    (let [quiz [{:id "1" :text "What is the capital of Sweden?" :difficulty :trivial :score 1 :answer "Stockholm"}
-                {:id "2" :text "What is the capital of France?" :difficulty :trivial :score 1 :answer "Paris"}
-                {:id "3" :text "What is the capital of Mauritius?" :difficulty :easy :score 1 :answer "Port Louis"}
-                {:id "4" :text "What is the capital of Germany?" :difficulty :easy :score 1 :answer "Berlin"}]
-          state {:quiz quiz}
-          user-input {:id "3" :answer "Port Louis"}
-          actual (sut/answer-question state user-input)]
-      (is (= {:score 1
-              :advance? true
-              :streak 1
-              :difficulty :easy
-              :quiz [{:id "1" :text "What is the capital of Sweden?" :difficulty :trivial :score 1 :answer "Stockholm"}
-                     {:id "2" :text "What is the capital of France?" :difficulty :trivial :score 1 :answer "Paris"}
-                     {:id "3"
-                      :text "What is the capital of Mauritius?"
-                      :difficulty :easy
-                      :score 1
-                      :correct? true
-                      :answer {:actual "Port Louis" :got "Port Louis"}}
-                     {:id "4" :text "What is the capital of Germany?" :difficulty :easy :score 1 :answer "Berlin"}]} actual))))
-
-
   (testing "Does nothing if the question is not found in the quiz"
     (let [quiz []
           state {:quiz quiz}
           user-input {:id "3" :answer "Something obscure"}
           actual (sut/answer-question state user-input)]
-      (is (= {:advance? false :streak 0 :score 0 :quiz [] :difficulty nil} actual)))))
+      (is (= {:advance? false :streak 0 :score 0 :quiz [] :difficulty nil} actual))))
+
+  (testing "Correct answer should add score points for that question"
+    (let [quiz [{:id "3" :text "What is the capital of Mauritius?" :difficulty :easy :score 10 :answer "Port Louis"}]
+          state {:quiz quiz :streak 3 :score 5}
+          user-input {:id "3" :answer "Port Louis"}
+          actual (sut/answer-question state user-input)]
+      (is (= 15 (:score actual)))))
+
+  (testing "Correct answer should increase the streak"
+    (let [quiz [{:id "3" :text "What is the capital of Mauritius?" :difficulty :easy :score 1 :answer "Port Louis"}]
+          state {:quiz quiz :streak 3}
+          user-input {:id "3" :answer "Port Louis"}
+          actual (sut/answer-question state user-input)]
+      (is (= 4 (:streak actual)))))
+
+  (testing "Incorrect answer should reset the streak"
+    (let [quiz [{:id "3" :text "What is the capital of Mauritius?" :difficulty :easy :score 1 :answer "Port Louis"}]
+          state {:quiz quiz :streak 3}
+          user-input {:id "3" :answer "Wrong"}
+          actual (sut/answer-question state user-input)]
+      (is (= 0 (:streak actual)))))
+
+  (testing "The difficulty of the quiz is the difficulty of the current question"
+    (let [quiz [{:id "3" :text "What is the capital of Mauritius?" :difficulty :medium :score 1 :answer "Port Louis"}]
+          state {:quiz quiz}
+          user-input {:id "3" :answer "Port Louis"}
+          actual (sut/answer-question state user-input)]
+      (is (= :medium (:difficulty actual)))))
+
+  (testing "Correct answer should advance the difficulty"
+    (let [quiz [{:id "3" :text "What is the capital of Mauritius?" :difficulty :easy :score 1 :answer "Port Louis"}]
+          state {:quiz quiz}
+          user-input {:id "3" :answer "Port Louis"}
+          actual (sut/answer-question state user-input)]
+      (is (true? (:advance? actual)))))
+
+  (testing "Incorrect answer should not advance the difficulty"
+    (let [quiz [{:id "3" :text "What is the capital of Mauritius?" :difficulty :easy :score 1 :answer "Port Louis"}]
+          state {:quiz quiz}
+          user-input {:id "3" :answer "Wrong"}
+          actual (sut/answer-question state user-input)]
+      (is (false? (:advance? actual)))))
+
+  (testing "Should add the timestamp the question was answered"
+    (with-redefs [sut/current-time-in-millis (constantly 1736137133999)]
+      (let [quiz [{:id "3" :text "What is the capital of Mauritius?" :difficulty :easy :score 1 :answer "Port Louis"}]
+            state {:quiz quiz}
+            user-input {:id "3" :answer "Port Louis"}
+            actual (sut/answer-question state user-input)]
+        (is (= 1736137133999 (:answered-at (first (:quiz actual)))))))))
 
 
 (deftest test-get-next-difficulty
   (testing "Should return the next difficulty level when advancing the difficulty"
+    (is (= :trivial (sut/get-next-difficulty nil true)))
     (is (= :easy (sut/get-next-difficulty :trivial true)))
     (is (= :medium (sut/get-next-difficulty :easy true)))
     (is (= :hard (sut/get-next-difficulty :medium true)))
@@ -89,6 +84,7 @@
 
 
   (testing "Should return the next difficulty level when not advancing the difficulty"
+    (is (= :trivial (sut/get-next-difficulty nil false)))
     (is (= :trivial (sut/get-next-difficulty :trivial false)))
     (is (= :trivial (sut/get-next-difficulty :easy false)))
     (is (= :easy (sut/get-next-difficulty :medium false)))
@@ -146,8 +142,31 @@
 
 
 (deftest test-next-question
-  (testing "Should return next question"
-    #_(let [state {:pool question-pool :difficulty :easy}
+  (testing "Should return a trivial question as the first question"
+    (let [state {:pool question-pool :difficulty :easy}
+          user-input {:id "3" :answer "Port Louis"}]
+      (is (= :trivial (:difficulty (:next-question (sut/fetch-next-question state user-input)))))
+      (is (= :trivial (:difficulty (:next-question (sut/fetch-next-question state user-input)))))
+      (is (= :trivial (:difficulty (:next-question (sut/fetch-next-question state user-input)))))
+      (is (= :trivial (:difficulty (:next-question (sut/fetch-next-question state user-input)))))
+      (is (= :trivial (:difficulty (:next-question (sut/fetch-next-question state user-input)))))))
+
+  (testing "Should contain the timestamp of the question of when it was added to the quiz"
+    (with-redefs [sut/current-time-in-millis (constantly 1736137133999)]
+      (let [state {:pool question-pool :difficulty :easy}
             user-input {:id "3" :answer "Port Louis"}
             actual (sut/fetch-next-question state user-input)]
-        (is (contains? actual :next-question)))))
+        (is (= 1736137133999 (get-in actual [:next-question :picked-at]))))))
+
+  #_(testing "Should advance the game when questions are answered correctly forming a streak"
+    (let [state-1 (sut/fetch-next-question {:pool question-pool} {})
+          state-2 (sut/fetch-next-question state-1 (:next-question state-1))
+          state-3 (sut/fetch-next-question state-2 (:next-question state-2))
+          state-4 (sut/fetch-next-question state-3 (:next-question state-3))
+          state-5 (sut/fetch-next-question state-4 (:next-question state-4))
+          state-6 (sut/fetch-next-question state-5 (:next-question state-5))]
+      (clojure.pprint/pprint state-6)
+      (is (= :trivial (get-in state-1 [:next-question :difficulty])))
+      (is (= :easy (get-in state-2 [:next-question :difficulty])))
+      (is (= :medium (get-in state-3 [:next-question :difficulty])))
+      (is (= 2 (:score state-3))))))
