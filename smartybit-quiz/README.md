@@ -1,4 +1,4 @@
-# SmartyBit Quiz
+# DEPRECATED in favor of smartybit
 
 A Clojure Polylith mono-repository with a quiz application.
 
