@@ -1,1 +1,1 @@
-DATA_DIR=$(pwd) docker-compose up
+DATA_DIR=$(pwd) docker-compose up --build

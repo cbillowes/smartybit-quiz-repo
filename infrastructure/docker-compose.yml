@@ -9,6 +9,9 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:${DATA_DIR}/mongo/data
+      # Bind-mount init.js and :ro makes it read-only
+      - ./mongo/init.js:/docker-entrypoint-initdb.d/init.js:ro
+    restart: unless-stopped
 
   postgres:
     build:
