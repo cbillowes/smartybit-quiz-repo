@@ -1,6 +1,0 @@
-{:paths ["src" "resources"]
- :deps {metosin/malli {:mvn/version "0.17.0"}
-        metosin/jsonista {:mvn/version "0.3.13"}
-        com.novemberain/monger {:mvn/version "3.1.0"}}
- :aliases {:test {:extra-paths ["test"]
-                  :extra-deps {}}}}
