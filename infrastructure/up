@@ -1,0 +1,1 @@
+DATA_DIR=$(pwd) docker-compose up
