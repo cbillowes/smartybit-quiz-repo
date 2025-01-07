@@ -1,6 +1,7 @@
 {:paths ["src" "resources"]
  :deps {ring/ring-core {:mvn/version "1.13.0"}
         compojure/compojure {:mvn/version "1.7.1"}
-        io.pedestal/pedestal.jetty {:mvn/version "0.7.2"}}
+        io.pedestal/pedestal.jetty {:mvn/version "0.7.2"}
+        mount/mount {:mvn/version "0.1.16"}}
  :aliases {:test {:extra-paths ["test"]
                   :extra-deps {}}}}
