@@ -1,0 +1,1 @@
+(ns smartybit.repository.interface)

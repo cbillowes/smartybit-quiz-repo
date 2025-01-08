@@ -1,10 +1,12 @@
 {:aliases  {:dev {:extra-paths ["development/src"
                                 "bases/webapp/src"
                                 "components/quiz-engine/src"
-                                "components/profile/src"]
+                                "components/profile/src"
+                                "components/repository/src"]
 
                   :extra-deps {smartybit/profile {:local/root "components/profile"}
                                smartybit/quiz-engine {:local/root "components/quiz-engine"}
+                               smartybit/repository {:local/root "components/repository"}
 
                                org.clojure/clojure {:mvn/version "1.12.0"}
                                metosin/malli {:mvn/version "0.17.0"}
@@ -16,7 +18,8 @@
 
             :test {:extra-paths ["bases/webapp/test"
                                  "components/quiz-engine/test"
-                                 "components/profile/test"]}
+                                 "components/profile/test"
+                                 "components/repository/test"]}
 
             :poly {:main-opts ["-m" "polylith.clj.core.poly-cli.core"]
                    :extra-deps {polylith/clj-poly {:mvn/version "0.2.21"}}}
