@@ -3,16 +3,14 @@
             [io.pedestal.http.route :as route]
             [mount.core :as mount]
             [smartybit.repository.mongodb :as mongodb]
-            [smartybit.profile.repository.core :as repo]
-            [smartybit.profile.repository.mongodb :as profile-repo]))
+            [smartybit.webapp.api.profile :as profile]))
 
-(defn respond-hello [request]
-  {:status 200 :content-type "application/json" :body (repo/get-profiles (profile-repo/profile-repository))})
+(defonce *http-server (atom nil))
 
 
 (def routes
   (route/expand-routes
-   #{["/greet" :get respond-hello :route-name :greet]}))
+   profile/routes))
 
 
 (defn start []
@@ -23,10 +21,12 @@
        ::http/port 8890
        ::http/type :jetty}
       (http/create-server)
-      (http/start)))
+      (http/start)
+      (#(reset! *http-server %))))
 
 
 (defn stop []
-  (mount/stop #'mongodb/conn))
-
-(start)
+  (mount/stop #'mongodb/conn)
+  (when @*http-server
+    (http/stop @*http-server)
+    (reset! *http-server nil)))
